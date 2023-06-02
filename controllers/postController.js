@@ -26,7 +26,7 @@ const getPostById = async (req, res) => {
     try {
         const post = await Post.findByPk(req.params.id);
         if (!post) {
-            res.status(404).json({
+            return res.status(404).json({
                 message: "Post not found"
             })
         }
@@ -40,7 +40,7 @@ const getPostById = async (req, res) => {
 }
 
 const checkUserId = async (userId) => {
-    const user = await User.findByPk(userId);
+    const user = await User.findByPk(userId, { attributes: { exclude: ['UserId'] } });
     if (!user) {
         throw new Error("User not found");
     }
@@ -58,7 +58,11 @@ const createPost = async(req, res) => {
                 userId
             });
             console.log(post);
-            res.status(200).json({ status: "success", data: post });
+            res.status(201).json({ 
+                status: "success", 
+                message: "Successfully created a post",
+                data: post,
+            });
         }
     } catch (err) {
         res.status(500).json({
@@ -68,22 +72,9 @@ const createPost = async(req, res) => {
     }
 }
 
-const checkReqBody = (reqBody) => {
-    if (reqBody.hasOwnProperty(title)) {
-        return reqBody[title];
-    } 
-    if (reqBody.hasOwnProperty(content)) {
-        return reqBody[content];
-    } 
-    if (reqBody.hasOwnProperty(content) && reqBody.hasOwnProperty(title)) {
-        return reqBody;
-    }
-}
 
 const checkUser = async (userId, postId) => {
     if (!userId) throw new Error("You are not logged in");
-    console.log('ID: 📯 📯 📯 ', postId);                
-    console.log('User ID: 📯 📯 📯 ', userId);
     if (typeof userId === 'string') {
         userId = Number(userId);
     }
@@ -166,5 +157,6 @@ module.exports = {
     getPostById,
     createPost,
     updatePost,
-    deletePost
+    deletePost,
+    checkUserId,
 }
