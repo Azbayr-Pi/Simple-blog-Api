@@ -3,6 +3,7 @@ const app = express();
 const sequelize = require('./sequelize');
 const port = 3000;
 const postRouter = require('./routes/postRoute');
+const commentRouter = require('./routes/commentRoute');
 
 const Comment = require('./models/comment');
 const User = require('./models/user');
@@ -24,10 +25,10 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/posts', postRouter);
-app.use('/api/posts/:postId');
+app.use('/api/posts/:postId', commentRouter);
 
 sequelize.sync({ alter: true })
-  .then(result => {
+  .then(() => {
     startServer();
   })
   .catch(err => {
