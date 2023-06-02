@@ -12,13 +12,6 @@ const Post = sequelize.define('Post', {
     type: DataTypes.TEXT,
     allowNull: false
   }, 
-  userId: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: 'Users',
-      key: 'id'
-    } 
-  }
 }, {
   // Options
 });
